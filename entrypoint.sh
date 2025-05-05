@@ -54,6 +54,10 @@ python manage.py collectstatic --no-input
 echo "Creating superuser if needed..."
 python manage.py shell -c "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.filter(email='admin@example.com').exists() or User.objects.create_superuser('admin', 'admin@example.com', 'adminpassword123')"
 
+# Обновляем библиотеки для ML-модели перед обучением
+echo "Updating ML libraries..."
+pip install --upgrade numpy pandas scikit-learn matplotlib seaborn
+
 # Обучаем модель ML
 echo "Training ML model..."
 mkdir -p /app/ml_model/models
