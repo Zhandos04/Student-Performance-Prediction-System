@@ -1,10 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Управление курсами | Система прогнозирования успеваемости</title>
-  <link rel="stylesheet" href="/static/css/admin_courses.css" />
+  <link rel="stylesheet" href="{% static 'css/admin_courses.css' %}" />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -12,17 +13,17 @@
     <!-- LEFT SIDEBAR -->
     <article class="menu-container">
       <div class="menu-header">
-        <img src="/static/images/logo.png" alt="Logo" class="logo" />
+        <img src="{% static 'images/logo.png' %}" alt="Logo" class="logo" />
         <span class="app-name">Base</span>
       </div>
       <nav class="menu-items">
-        <a href="{% url 'dashboard' %}" class="menu-item"><img src="/static/images/dashboard2.png" class="icon" /><span>Панель управления</span></a>
-        <a href="{% url 'admin_courses' %}" class="menu-item"><img src="/static/images/courses.png" class="icon" /><span>Курсы</span></a>
-        <a href="{% url 'admin_students' %}" class="menu-item"><img src="/static/images/students.png" class="icon" /><span>Студенты</span></a>
-        <a href="{% url 'settings' %}" class="menu-item"><img src="/static/images/setting.png" class="icon" /><span>Настройки</span></a>
+        <a href="{% url 'dashboard' %}" class="menu-item"><img src="{% static 'images/dashboard2.png' %}" class="icon" /><span>Панель управления</span></a>
+        <a href="{% url 'admin_courses' %}" class="menu-item"><img src="{% static 'images/courses.svg' %}" class="icon" /><span>Курсы</span></a>
+        <a href="{% url 'admin_students' %}" class="menu-item"><img src="{% static 'images/students.svg' %}" class="icon" /><span>Студенты</span></a>
+        <a href="{% url 'settings' %}" class="menu-item"><img src="{% static 'images/setting.png' %}" class="icon" /><span>Настройки</span></a>
       </nav>
       <div class="menu-footer">
-        <a href="{% url 'logout' %}" class="menu-item logout"><img src="/static/images/Logout.png" class="icon" /><span>Выход</span></a>
+        <a href="{% url 'logout' %}" class="menu-item logout"><img src="{% static 'images/Logout.png' %}" class="icon" /><span>Выход</span></a>
       </div>
     </article>
 
@@ -30,7 +31,7 @@
     <main class="main">
       <header class="header">
         <h1>Управление курсами</h1>
-        <p>Добавление, редактирование и удаление курсов</p>
+        <p>Добавление, редактирование и управление курсами</p>
       </header>
 
       <div class="action-bar">
@@ -43,7 +44,7 @@
             <tr>
               <th>Код</th>
               <th>Название</th>
-              <th>Преподаватель</th>
+              <th>Описание</th>
               <th>Студенты</th>
               <th>Действия</th>
             </tr>
@@ -53,10 +54,10 @@
             <tr>
               <td>{{ course.code }}</td>
               <td>{{ course.name }}</td>
-              <td>{{ course.instructor.get_full_name }}</td>
-              <td>{{ course.students.count }}</td>
+              <td>{{ course.description|truncatechars:40 }}</td>
+              <td>{{ course.student_count }}</td>
               <td class="actions">
-                <button class="edit-btn" data-id="{{ course.id }}">Редактировать</button>
+                <a href="{% url 'course_details' course.id %}" class="edit-btn">Управление</a>
                 <button class="delete-btn" data-id="{{ course.id }}">Удалить</button>
                 <form method="post" action="{% url 'run_predictions' %}" style="display: inline;">
                   {% csrf_token %}
@@ -92,45 +93,84 @@
           <input type="text" id="name" name="name" required>
         </div>
         <div class="form-group">
-          <label for="instructor">Преподаватель</label>
-          <select id="instructor" name="instructor" required>
-            <option value="">-- Выберите преподавателя --</option>
-            {% for teacher in teachers %}
-            <option value="{{ teacher.id }}">{{ teacher.get_full_name }}</option>
-            {% endfor %}
-          </select>
-        </div>
-        <div class="form-group">
           <label for="description">Описание</label>
           <textarea id="description" name="description" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="students">Студенты</label>
+          <select id="students" name="students" multiple>
+            {% for student in students %}
+            <option value="{{ student.id }}">{{ student.get_full_name }}</option>
+            {% endfor %}
+          </select>
         </div>
         <button type="submit" class="submit-btn">Сохранить</button>
       </form>
     </div>
   </div>
 
+  <!-- Delete Course Confirmation Modal -->
+<div id="deleteCourseModal" class="modal">
+  <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Подтверждение удаления</h2>
+      <p>Вы уверены, что хотите удалить курс? Это действие нельзя отменить.</p>
+      <form method="post" id="deleteCourseForm" action="">
+          {% csrf_token %}
+          <div class="button-group">
+              <button type="button" class="cancel-btn">Отмена</button>
+              <button type="submit" class="submit-btn">Удалить</button>
+          </div>
+      </form>
+  </div>
+</div>
+
   <script>
-    // Modal functionality
     document.addEventListener('DOMContentLoaded', function() {
-      const modal = document.getElementById('addCourseModal');
-      const btn = document.getElementById('addCourseBtn');
-      const span = document.getElementsByClassName('close')[0];
+      // Модальное окно добавления курса
+      const addModal = document.getElementById('addCourseModal');
+      const addBtn = document.getElementById('addCourseBtn');
+      const addModalClose = addModal.querySelector('.close');
       
-      btn.onclick = function() {
-        modal.style.display = 'block';
+      addBtn.onclick = function() {
+        addModal.style.display = 'block';
       }
       
-      span.onclick = function() {
-        modal.style.display = 'none';
+      addModalClose.onclick = function() {
+        addModal.style.display = 'none';
       }
       
+      // Модальное окно удаления курса
+      const deleteModal = document.getElementById('deleteCourseModal');
+      const deleteModalClose = deleteModal.querySelector('.close');
+      const cancelBtn = deleteModal.querySelector('.cancel-btn');
+      const deleteButtons = document.querySelectorAll('.delete-btn');
+      const deleteForm = document.getElementById('deleteCourseForm');
+        
+        deleteButtons.forEach(button => {
+            button.onclick = function() {
+                const courseId = this.getAttribute('data-id');
+                deleteForm.action = `/dashboard/admin/courses/${courseId}/delete/`;
+                deleteModal.style.display = 'block';
+            }
+        });
+      deleteModalClose.onclick = function() {
+        deleteModal.style.display = 'none';
+      }
+      
+      cancelBtn.onclick = function() {
+        deleteModal.style.display = 'none';
+      }
+      
+      // Закрытие модальных окон при клике вне их содержимого
       window.onclick = function(event) {
-        if (event.target == modal) {
-          modal.style.display = 'none';
+        if (event.target == addModal) {
+          addModal.style.display = 'none';
+        }
+        if (event.target == deleteModal) {
+          deleteModal.style.display = 'none';
         }
       }
-      
-      // Edit and Delete functionality would be added here
     });
   </script>
 </body>

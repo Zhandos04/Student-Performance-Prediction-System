@@ -1,10 +1,11 @@
+{% load static dashboard_extras %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Административная панель | Система прогнозирования успеваемости</title>
-  <link rel="stylesheet" href="/static/css/admin_dashboard.css" />
+  <link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}" />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -12,17 +13,17 @@
     <!-- LEFT SIDEBAR -->
     <article class="menu-container">
         <div class="menu-header">
-            <img src="/static/images/logo.png" alt="Logo" class="logo" />
+            <img src="{% static 'images/logo.png' %}" alt="Logo" class="logo" />
             <span class="app-name">Base</span>
           </div>
           <nav class="menu-items">
-            <a href="{% url 'dashboard' %}" class="menu-item"><img src="/static/images/dashboard3.png" class="icon" /><span>Панель управления</span></a>
-            <a href="{% url 'admin_courses' %}" class="menu-item"><img src="/static/images/courses.png" class="icon" /><span>Курсы</span></a>
-            <a href="{% url 'admin_students' %}" class="menu-item"><img src="/static/images/students.png" class="icon" /><span>Студенты</span></a>
-            <a href="{% url 'settings' %}" class="menu-item"><img src="/static/images/setting.png" class="icon" /><span>Настройки</span></a>
+            <a href="{% url 'dashboard' %}" class="menu-item"><img src="{% static 'images/dashboard3.png' %}" class="icon" /><span>Панель управления</span></a>
+            <a href="{% url 'admin_courses' %}" class="menu-item"><img src="{% static 'images/courses.svg' %}" class="icon" /><span>Курсы</span></a>
+            <a href="{% url 'admin_students' %}" class="menu-item"><img src="{% static 'images/students.svg' %}" class="icon" /><span>Студенты</span></a>
+            <a href="{% url 'settings' %}" class="menu-item"><img src="{% static 'images/setting.png' %}" class="icon" /><span>Настройки</span></a>
           </nav>
           <div class="menu-footer">
-            <a href="{% url 'logout' %}" class="menu-item logout"><img src="/static/images/Logout.png" class="icon" /><span>Выход</span></a>
+            <a href="{% url 'logout' %}" class="menu-item logout"><img src="{% static 'images/Logout.png' %}" class="icon" /><span>Выход</span></a>
           </div>
         </article>
     
@@ -82,7 +83,10 @@
             <div class="action-buttons">
               <a href="{% url 'admin_courses' %}" class="action-button">Управление курсами</a>
               <a href="{% url 'admin_students' %}" class="action-button">Управление студентами</a>
-              <a href="{% url 'run_predictions' %}" class="action-button primary">Запустить прогнозирование</a>
+              <form method="post" action="{% url 'run_predictions' %}" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="action-button primary">Запустить прогнозирование</button>
+              </form>
             </div>
           </div>
         </main>
@@ -92,13 +96,39 @@
       <script>
         document.addEventListener('DOMContentLoaded', function() {
           const ctx = document.getElementById('predictionChart').getContext('2d');
+          
+          // Используем реальные данные прогнозов из контекста
+          {% if prediction_stats %}
+          const predictionData = {
+            '90-100': {{ prediction_stats|get_item:'90-100'|default:0 }},
+            '80-89': {{ prediction_stats|get_item:'80-89'|default:0 }},
+            '70-79': {{ prediction_stats|get_item:'70-79'|default:0 }},
+            '60-69': {{ prediction_stats|get_item:'60-69'|default:0 }},
+            '<60': {{ prediction_stats|get_item:'<60'|default:0 }}
+          };
+          {% else %}
+          const predictionData = {
+            '90-100': 0,
+            '80-89': 0,
+            '70-79': 0,
+            '60-69': 0,
+            '<60': 0
+          };
+          {% endif %}
+          
           const predictionChart = new Chart(ctx, {
             type: 'bar',
             data: {
               labels: ['90-100', '80-89', '70-79', '60-69', '<60'],
               datasets: [{
                 label: 'Распределение прогнозов',
-                data: [12, 25, 30, 18, 5],
+                data: [
+                  predictionData['90-100'],
+                  predictionData['80-89'],
+                  predictionData['70-79'],
+                  predictionData['60-69'],
+                  predictionData['<60']
+                ],
                 backgroundColor: [
                   'rgba(75, 192, 192, 0.8)',
                   'rgba(54, 162, 235, 0.8)',
@@ -120,7 +150,11 @@
               responsive: true,
               scales: {
                 y: {
-                  beginAtZero: true
+                  beginAtZero: true,
+                  ticks: {
+                    stepSize: 1,
+                    precision: 0
+                  }
                 }
               }
             }

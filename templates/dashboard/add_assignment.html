@@ -1,0 +1,133 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Добавление задания | {{ course.name }}</title>
+  <link rel="stylesheet" href="{% static 'css/admin_courses.css' %}" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    .form-container {
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      max-width: 700px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .form-group input[type="datetime-local"] {
+      padding: 8px;
+    }
+    
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    
+    .button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    
+    .primary-button {
+      background: #605BFF;
+      color: white;
+    }
+    
+    .secondary-button {
+      background: #e0e0e0;
+      color: #333;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- LEFT SIDEBAR -->
+    <article class="menu-container">
+      <div class="menu-header">
+        <img src="{% static 'images/logo.png' %}" alt="Logo" class="logo" />
+        <span class="app-name">Base</span>
+      </div>
+      <nav class="menu-items">
+        <a href="{% url 'dashboard' %}" class="menu-item"><img src="{% static 'images/dashboard2.png' %}" class="icon" /><span>Панель управления</span></a>
+        <a href="{% url 'admin_courses' %}" class="menu-item"><img src="{% static 'images/courses.svg' %}" class="icon" /><span>Курсы</span></a>
+        <a href="{% url 'admin_students' %}" class="menu-item"><img src="{% static 'images/students.svg' %}" class="icon" /><span>Студенты</span></a>
+        <a href="{% url 'settings' %}" class="menu-item"><img src="{% static 'images/setting.png' %}" class="icon" /><span>Настройки</span></a>
+      </nav>
+      <div class="menu-footer">
+        <a href="{% url 'logout' %}" class="menu-item logout"><img src="{% static 'images/Logout.png' %}" class="icon" /><span>Выход</span></a>
+      </div>
+    </article>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+      <header class="header">
+        <h1>Добавление задания</h1>
+        <p>Курс: {{ course.name }}</p>
+      </header>
+      
+      <div class="form-container">
+        <form method="post">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="title">Название задания</label>
+            <input type="text" id="title" name="title" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="description">Описание</label>
+            <textarea id="description" name="description" required></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="due_date">Срок сдачи</label>
+            <input type="datetime-local" id="due_date" name="due_date" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="max_points">Максимальные баллы</label>
+            <input type="number" id="max_points" name="max_points" value="100" min="1" max="100" required>
+          </div>
+          
+          <div class="button-group">
+            <button type="submit" class="button primary-button">Сохранить</button>
+            <a href="{% url 'course_details' course.id %}" class="button secondary-button">Отмена</a>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

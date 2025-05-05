@@ -1,10 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Уведомления | Система прогнозирования успеваемости</title>
-  <link rel="stylesheet" href="/static/css/notification.css" />
+  <link rel="stylesheet" href="{% static 'css/notification.css' %}" />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
  </head>
 <body>
@@ -12,17 +13,17 @@
     <!-- LEFT MENU -->
     <article class="menu-container">
       <div class="menu-header">
-        <img src="/static/images/logo.png" alt="Logo" class="logo" />
+        <img src="{% static 'images/logo.png' %}" alt="Logo" class="logo" />
         <span class="app-name">Base</span>
       </div>
       <nav class="menu-items">
-        <a href="{% url 'dashboard' %}" class="menu-item"><img src="/static/images/dashboard2.png" class="icon" /><span>Панель управления</span></a>
-        <a href="{% url 'notifications' %}" class="menu-item"><img src="/static/images/notification.png" class="icon" /><span>Уведомления</span></a>
-        <a href="{% url 'support' %}" class="menu-item"><img src="/static/images/support.png" class="icon" /><span>Поддержка</span></a>
-        <a href="{% url 'settings' %}" class="menu-item"><img src="/static/images/setting.png" class="icon" /><span>Настройки</span></a>
+        <a href="{% url 'dashboard' %}" class="menu-item"><img src="{% static 'images/dashboard2.png' %}" class="icon" /><span>Панель управления</span></a>
+        <a href="{% url 'notifications' %}" class="menu-item"><img src="{% static 'images/notification.png' %}" class="icon" /><span>Уведомления</span></a>
+        <a href="{% url 'support' %}" class="menu-item"><img src="{% static 'images/support.png' %}" class="icon" /><span>Поддержка</span></a>
+        <a href="{% url 'settings' %}" class="menu-item"><img src="{% static 'images/setting.png' %}" class="icon" /><span>Настройки</span></a>
       </nav>
       <div class="menu-footer">
-        <a href="{% url 'logout' %}" class="menu-item logout"><img src="/static/images/Logout.png" class="icon" /><span>Выход</span></a>
+        <a href="{% url 'logout' %}" class="menu-item logout"><img src="{% static 'images/Logout.png' %}" class="icon" /><span>Выход</span></a>
       </div>
     </article>
 
@@ -31,37 +32,59 @@
       <h2 class="notification-title">Уведомления</h2>
       
       <div class="message-box">
+        <!-- Новые задания -->
+        {% for assignment in new_assignments %}
         <div class="message">
-          <img src="/static/images/notification_icon.png" class="icon" alt="Notification Icon">
+          <img src="{% static 'images/notification_icon.png' %}" class="icon" alt="Notification Icon">
           <div class="message-text">
             <h3>Новое задание</h3>
-            <p>Добавлено новое задание по курсу "Математика". Срок сдачи: 15 мая 2025.</p>
+            <p>Добавлено новое задание по курсу "{{ assignment.course.name }}". Срок сдачи: {{ assignment.due_date|date:"d.m.Y" }}.</p>
           </div>
         </div>
+        {% endfor %}
         
+        <!-- Новые оценки -->
+        {% for grade in recent_grades %}
         <div class="message">
-          <img src="/static/images/grade_icon.png" class="icon" alt="Grade Icon">
+          <img src="{% static 'images/grade_icon.png' %}" class="icon" alt="Grade Icon">
           <div class="message-text">
             <h3>Новая оценка</h3>
-            <p>Вы получили оценку 85 за последнее контрольную работу по физике.</p>
+            <p>Вы получили оценку {{ grade.score|floatformat:1 }} за задание "{{ grade.assignment.title }}" по курсу "{{ grade.assignment.course.name }}".</p>
           </div>
         </div>
+        {% endfor %}
         
+        <!-- Недавние прогнозы -->
+        {% for prediction in recent_predictions %}
         <div class="message">
-          <img src="/static/images/prediction_icon.png" class="icon" alt="Prediction Icon">
+          <img src="{% static 'images/prediction_icon.png' %}" class="icon" alt="Prediction Icon">
           <div class="message-text">
             <h3>Обновление прогноза</h3>
-            <p>Ваша прогнозируемая итоговая оценка по программированию улучшилась до A-.</p>
+            <p>Ваша прогнозируемая итоговая оценка по курсу "{{ prediction.course.name }}" составляет {{ prediction.predicted_score|floatformat:1 }} (уверенность: {{ prediction.confidence|floatformat:2 }}).</p>
           </div>
         </div>
+        {% endfor %}
         
+        <!-- Предупреждения о посещаемости -->
+        {% for course in courses_with_low_attendance %}
         <div class="message">
-          <img src="/static/images/warning_icon.png" class="icon" alt="Warning Icon">
+          <img src="{% static 'images/warning_icon.png' %}" class="icon" alt="Warning Icon">
           <div class="message-text">
             <h3>Предупреждение о посещаемости</h3>
-            <p>Ваша посещаемость по истории ниже 75%. Это может негативно повлиять на вашу итоговую оценку.</p>
+            <p>Ваша посещаемость по курсу "{{ course.name }}" ниже 75%. Это может негативно повлиять на вашу итоговую оценку.</p>
           </div>
         </div>
+        {% endfor %}
+        
+        {% if not new_assignments and not recent_grades and not recent_predictions and not courses_with_low_attendance %}
+        <div class="message">
+          <img src="{% static 'images/notification2.png' %}" class="icon" alt="Notification Icon">
+          <div class="message-text">
+            <h3>Нет новых уведомлений</h3>
+            <p>У вас нет новых уведомлений на данный момент.</p>
+          </div>
+        </div>
+        {% endif %}
       </div>
     </main>
 
@@ -85,5 +108,17 @@
       </div>
     </aside>
   </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const courseButtons = document.querySelectorAll('.courses button');
+      courseButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          courseButtons.forEach(btn => btn.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
+    });
+  </script>
 </body>
 </html>
