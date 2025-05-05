@@ -55,8 +55,16 @@ echo "Creating superuser if needed..."
 python manage.py shell -c "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.filter(email='admin@example.com').exists() or User.objects.create_superuser('admin', 'admin@example.com', 'adminpassword123')"
 
 # Обновляем библиотеки для ML-модели перед обучением
-echo "Updating ML libraries..."
-pip install --upgrade numpy pandas scikit-learn matplotlib seaborn
+echo "Updating ML libraries with compatible versions..."
+pip install numpy==1.23.5 pandas==2.0.3 scikit-learn==1.2.2 matplotlib seaborn joblib==1.2.0
+
+# Проверка совместимости numpy и устранение ошибок
+echo "Checking numpy compatibility..."
+python -c "import numpy; print(f'NumPy version: {numpy.__version__}')"
+
+# Обновление файла predictor.py для исправления ошибки joblib.JoblibError
+echo "Updating predictor.py to fix JoblibError issue..."
+sed -i "s/except (FileNotFoundError, joblib.JoblibError) as e:/except (FileNotFoundError, Exception) as e:/g" /app/ml_model/predictor.py
 
 # Обучаем модель ML
 echo "Training ML model..."

@@ -70,6 +70,23 @@
       color: #333;
       text-decoration: none;
     }
+    
+    .errorlist {
+      color: #e53935;
+      font-size: 14px;
+      margin-top: 5px;
+      padding-left: 0;
+      list-style-type: none;
+    }
+    
+    .error-message {
+      background-color: #ffebee;
+      border: 1px solid #ffcdd2;
+      color: #b71c1c;
+      padding: 10px 15px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
   </style>
 </head>
 <body>
@@ -99,26 +116,71 @@
       </header>
       
       <div class="form-container">
+        {% if form.errors %}
+        <div class="error-message">
+          <p><strong>Пожалуйста, исправьте следующие ошибки:</strong></p>
+          <ul>
+            {% for field in form %}
+              {% for error in field.errors %}
+                <li>{{ field.label }}: {{ error }}</li>
+              {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+        
         <form method="post">
           {% csrf_token %}
+          
           <div class="form-group">
-            <label for="title">Название задания</label>
-            <input type="text" id="title" name="title" required>
+            <label for="{{ form.title.id_for_label }}">Название задания</label>
+            {{ form.title }}
+            {% if form.title.errors %}
+              <ul class="errorlist">
+              {% for error in form.title.errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+              </ul>
+            {% endif %}
           </div>
           
           <div class="form-group">
-            <label for="description">Описание</label>
-            <textarea id="description" name="description" required></textarea>
+            <label for="{{ form.description.id_for_label }}">Описание</label>
+            {{ form.description }}
+            {% if form.description.errors %}
+              <ul class="errorlist">
+              {% for error in form.description.errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+              </ul>
+            {% endif %}
           </div>
           
           <div class="form-group">
-            <label for="due_date">Срок сдачи</label>
-            <input type="datetime-local" id="due_date" name="due_date" required>
+            <label for="{{ form.due_date.id_for_label }}">Срок сдачи</label>
+            {{ form.due_date }}
+            {% if form.due_date.errors %}
+              <ul class="errorlist">
+              {% for error in form.due_date.errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+              </ul>
+            {% endif %}
           </div>
           
           <div class="form-group">
-            <label for="max_points">Максимальные баллы</label>
-            <input type="number" id="max_points" name="max_points" value="100" min="1" max="100" required>
+            <label for="{{ form.max_points.id_for_label }}">Максимальные баллы</label>
+            {{ form.max_points }}
+            {% if form.max_points.errors %}
+              <ul class="errorlist">
+              {% for error in form.max_points.errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+              </ul>
+            {% endif %}
           </div>
           
           <div class="button-group">

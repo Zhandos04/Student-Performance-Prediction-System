@@ -186,7 +186,6 @@
       <div class="action-buttons">
         <a href="{% url 'add_assignment' course.id %}" class="action-button">Добавить задание</a>
         <a href="{% url 'record_attendance' course.id %}" class="action-button secondary">Отметить посещаемость</a>
-        <a href="{% url 'record_participation' course.id %}" class="action-button secondary">Отметить участие</a>
         <form method="post" action="{% url 'run_predictions' %}" style="display: inline;">
           {% csrf_token %}
           <input type="hidden" name="course_id" value="{{ course.id }}">

@@ -12,7 +12,9 @@ class CourseForm(forms.ModelForm):
 class AssignmentForm(forms.ModelForm):
     class Meta:
         model = Assignment
-        fields = ['title', 'course', 'description', 'due_date', 'max_points']
+        fields = ['title', 'description', 'due_date', 'max_points']
+        # Удаляем поле course из формы, так как будем устанавливать его программно
+        # fields = ['title', 'course', 'description', 'due_date', 'max_points']
         widgets = {
             'description': forms.Textarea(attrs={'rows': 3}),
             'due_date': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
@@ -21,7 +23,7 @@ class AssignmentForm(forms.ModelForm):
 class GradeForm(forms.ModelForm):
     class Meta:
         model = Grade
-        fields = ['student', 'assignment', 'score']
+        fields = ['score']  # Только поле score, student и assignment будут заполняться программно
 
 class AttendanceForm(forms.ModelForm):
     class Meta:

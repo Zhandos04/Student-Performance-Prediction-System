@@ -13,7 +13,14 @@ def filter_by_course(queryset, course):
     """Фильтрует QuerySet по курсу"""
     if queryset is None:
         return None
-    return queryset.filter(course=course)
+    # Проверяем, есть ли в queryset элементы с полем assignment
+    # Это для оценок (Grade)
+    if queryset.model.__name__ == 'Grade':
+        return queryset.filter(assignment__course=course)
+    # Это для предсказаний (Prediction)
+    elif queryset.model.__name__ == 'Prediction':
+        return queryset.filter(course=course)
+    return queryset
 
 @register.filter
 def filter_by_assignment(queryset, assignment):

@@ -59,7 +59,7 @@
           </thead>
           <tbody>
             {% for student in students %}
-            <tr data-courses="{{ student.enrolled_courses.all|join:',' }}">
+            <tr data-courses="{{ student.enrolled_courses.all|join:',' }}" data-course-ids="{% for course in student.enrolled_courses.all %}{{ course.id }}{% if not forloop.last %},{% endif %}{% endfor %}">
               <td>{{ student.id }}</td>
               <td>{{ student.get_full_name }}</td>
               <td>{{ student.email }}</td>
@@ -68,7 +68,7 @@
               <td>{{ student.avg_score|default:'N/A'|floatformat:1 }}</td>
               <td class="actions">
                 <a href="{% url 'student_details' student.id %}" class="view-btn">Просмотр</a>
-                <button class="edit-btn" data-id="{{ student.id }}">Редактировать</button>
+                <!-- Кнопка "Редактировать" убрана -->
               </td>
             </tr>
             {% empty %}
@@ -82,39 +82,7 @@
     </main>
   </div>
 
-  <!-- Edit Student Modal -->
-<div id="editStudentModal" class="modal">
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <h2>Редактировать данные студента</h2>
-    <form method="post" action="{% url 'edit_student' %}">
-      {% csrf_token %}
-      <input type="hidden" id="edit_student_id" name="student_id" value="">
-      <div class="form-group">
-        <label for="full_name">Полное имя</label>
-        <input type="text" id="full_name" name="full_name" required>
-      </div>
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" required>
-      </div>
-      <div class="form-group">
-        <label for="student_number">Номер студента</label>
-        <input type="text" id="student_number" name="student_number" required>
-      </div>
-      <div class="form-group">
-        <label for="courses">Курсы</label>
-        <select id="courses" name="courses" multiple>
-          {% for course in courses %}
-          <option value="{{ course.id }}">{{ course.name }}</option>
-          {% endfor %}
-        </select>
-        <small style="display: block; margin-top: 5px; color: #666;">Зажмите Ctrl (Cmd на Mac) для выбора нескольких курсов</small>
-      </div>
-      <button type="submit" class="submit-btn">Сохранить изменения</button>
-    </form>
-  </div>
-</div>
+  <!-- Удалено модальное окно редактирования, так как кнопка редактирования убрана -->
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -132,14 +100,15 @@
             const name = row.cells[1].textContent.toLowerCase();
             const email = row.cells[2].textContent.toLowerCase();
             const studentNumber = row.cells[3].textContent.toLowerCase();
-            const studentCourses = row.getAttribute('data-courses') || '';
+            const courseIds = row.getAttribute('data-course-ids') || '';
             
             const matchesSearch = name.includes(searchValue) || 
                                 email.includes(searchValue) || 
                                 studentNumber.includes(searchValue);
             
+            // Улучшенная логика проверки курса с использованием ID курсов
             const matchesCourse = !courseValue || 
-                                studentCourses.includes(courseValue);
+                                courseIds.split(',').includes(courseValue);
             
             if (matchesSearch && matchesCourse) {
               row.style.display = '';
@@ -152,42 +121,6 @@
       
       searchInput.addEventListener('input', filterStudents);
       courseFilter.addEventListener('change', filterStudents);
-      
-      // Модальное окно редактирования
-      const editModal = document.getElementById('editStudentModal');
-      const editBtns = document.querySelectorAll('.edit-btn');
-      const editModalClose = editModal.querySelector('.close');
-      
-      // Обработчики для кнопок редактирования
-      editBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-          const studentId = this.getAttribute('data-id');
-          const studentRow = this.closest('tr');
-          
-          // Заполнение формы редактирования данными студента
-          document.getElementById('edit_student_id').value = studentId;
-          document.getElementById('full_name').value = studentRow.cells[1].textContent;
-          document.getElementById('email').value = studentRow.cells[2].textContent;
-          document.getElementById('student_number').value = studentRow.cells[3].textContent;
-          
-          // Заполнение выбранных курсов будет реализовано в будущем
-          
-          // Отображение модального окна
-          editModal.style.display = 'block';
-        });
-      });
-      
-      // Закрытие модального окна
-      editModalClose.addEventListener('click', function() {
-        editModal.style.display = 'none';
-      });
-      
-      // Закрытие модального окна при клике вне его содержимого
-      window.addEventListener('click', function(event) {
-        if (event.target == editModal) {
-          editModal.style.display = 'none';
-        }
-      });
     });
   </script>
 </body>

@@ -49,7 +49,8 @@ def dashboard(request):
     elif request.user.role == 'admin':
         # Данные для администраторов
         total_students = User.objects.filter(role='student').count()
-        total_teachers = User.objects.filter(role='teacher').count() if hasattr(User, 'teacher') else 0
+        # Удаляем подсчет преподавателей
+        # total_teachers = User.objects.filter(role='teacher').count() if hasattr(User, 'teacher') else 0
         total_courses = Course.objects.count()
         
         # Получаем последние прогнозы с информацией о студентах и курсах
@@ -66,7 +67,7 @@ def dashboard(request):
         
         context = {
             'total_students': total_students,
-            'total_teachers': total_teachers,
+            # Удаляем total_teachers из контекста
             'total_courses': total_courses,
             'recent_predictions': recent_predictions,
             'prediction_stats': prediction_stats,
@@ -271,15 +272,21 @@ def add_assignment(request, course_id):
     course = get_object_or_404(Course, id=course_id)
     
     if request.method == 'POST':
+        # Создаем форму с данными POST, но не включаем поле course
         form = AssignmentForm(request.POST)
+        
         if form.is_valid():
+            # Создаем объект задания, но не сохраняем его в базу данных
             assignment = form.save(commit=False)
+            # Устанавливаем курс
             assignment.course = course
+            # Сохраняем задание
             assignment.save()
             messages.success(request, 'Задание успешно добавлено.')
             return redirect('course_details', course_id=course.id)
     else:
-        form = AssignmentForm(initial={'course': course})
+        # При GET-запросе просто инициализируем форму
+        form = AssignmentForm()
     
     context = {
         'form': form,
@@ -296,22 +303,32 @@ def add_grade(request, assignment_id, student_id):
     existing_grade = Grade.objects.filter(student=student, assignment=assignment).first()
     
     if request.method == 'POST':
+        print("POST данные:", request.POST)  # для отладки
+        
+        # Если оценка уже существует, обновляем её, иначе создаём новую
         if existing_grade:
             form = GradeForm(request.POST, instance=existing_grade)
         else:
             form = GradeForm(request.POST)
         
         if form.is_valid():
+            print("Форма валидна")  # для отладки
             grade = form.save(commit=False)
             grade.student = student
             grade.assignment = assignment
             grade.save()
+            print("Оценка сохранена:", grade.id, grade.score)  # для отладки
             messages.success(request, 'Оценка успешно сохранена.')
             return redirect('course_details', course_id=assignment.course.id)
+        else:
+            print("Ошибки формы:", form.errors)  # для отладки
+            messages.error(request, 'Ошибка при сохранении оценки. Пожалуйста, проверьте введенные данные.')
     else:
+        # При GET-запросе инициализируем форму
         if existing_grade:
             form = GradeForm(instance=existing_grade)
         else:
+            # Используем начальные значения
             form = GradeForm(initial={'student': student, 'assignment': assignment})
     
     context = {

@@ -35,7 +35,7 @@
         <!-- Новые задания -->
         {% for assignment in new_assignments %}
         <div class="message">
-          <img src="{% static 'images/notification_icon.png' %}" class="icon" alt="Notification Icon">
+          <img src="{% static 'images/notification2.png' %}" class="icon" alt="Notification Icon">
           <div class="message-text">
             <h3>Новое задание</h3>
             <p>Добавлено новое задание по курсу "{{ assignment.course.name }}". Срок сдачи: {{ assignment.due_date|date:"d.m.Y" }}.</p>
@@ -46,7 +46,7 @@
         <!-- Новые оценки -->
         {% for grade in recent_grades %}
         <div class="message">
-          <img src="{% static 'images/grade_icon.png' %}" class="icon" alt="Grade Icon">
+          <img src="{% static 'images/grade_icon.svg' %}" class="icon" alt="Grade Icon">
           <div class="message-text">
             <h3>Новая оценка</h3>
             <p>Вы получили оценку {{ grade.score|floatformat:1 }} за задание "{{ grade.assignment.title }}" по курсу "{{ grade.assignment.course.name }}".</p>
@@ -57,7 +57,7 @@
         <!-- Недавние прогнозы -->
         {% for prediction in recent_predictions %}
         <div class="message">
-          <img src="{% static 'images/prediction_icon.png' %}" class="icon" alt="Prediction Icon">
+          <img src="{% static 'images/prediction_icon.svg' %}" class="icon" alt="Prediction Icon">
           <div class="message-text">
             <h3>Обновление прогноза</h3>
             <p>Ваша прогнозируемая итоговая оценка по курсу "{{ prediction.course.name }}" составляет {{ prediction.predicted_score|floatformat:1 }} (уверенность: {{ prediction.confidence|floatformat:2 }}).</p>
