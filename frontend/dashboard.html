@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">   
+</head>
+<body>
+  <div class="container">
+    <!-- LEFT SIDEBAR -->
+    <article class="menu-container">
+      <div class="menu-header">
+        <img src="images/logo.png" alt="Logo" class="logo" />
+        <span class="app-name">Base</span>
+      </div>
+      <nav class="menu-items">
+        <a href="#dashboard" class="menu-item"><img src="images/dashboard3.png" class="icon" /><span>Dashboard</span></a>
+        <a href="notification.html" class="menu-item"><img src="images/notification.png" class="icon" /><span>Notification</span></a>
+        <a href="support.html" class="menu-item"><img src="images/support.png" class="icon" /><span>Support</span></a>
+        <a href="settings.html" class="menu-item"><img src="images/setting.png" class="icon" /><span>Settings</span></a>
+      </nav>
+      <div class="menu-footer">
+        <a href="sign in.html" class="menu-item logout"><img src="images/Logout.png" class="icon" /><span>Logout</span></a>
+      </div>
+    </article>
+
+    <!-- CENTER CONTENT -->
+    <main class="main">
+      <header class="header">
+        <h1>Welcome back!</h1>
+        <p>Here’s your academic overview for this semester.</p>
+      </header>
+
+      <div class="stats">
+        <div class="stat-box"><p>GPA</p><h2>3.33</h2></div>
+        <div class="stat-box"><p>SPA</p><h2>3.45</h2></div>
+        <div class="stat-box"><p>ECTS</p><h2>30</h2></div>
+      </div>
+
+      <div class="row">
+        <div class="content-box prediction">
+          <h3>Prediction</h3>
+          <div class="chart-wrapper">
+            <div class="y-axis">
+              <span>100%</span><span>80%</span><span>60%</span><span>40%</span><span>20%</span><span>0%</span>
+            </div>
+            <div class="chart-area">
+              <div class="chart">
+                <div style="height: 40%;"><span>40%</span></div>
+                <div style="height: 58%;"><span>58%</span></div>
+                <div style="height: 37%;"><span>37%</span></div>
+                <div style="height: 100%;"><span>100%</span></div>
+                <div style="height: 80%;"><span>80%</span></div>
+              </div>
+              <div class="x-axis">
+                <span>INF 101</span><span>CSS 105</span><span>INF 313</span><span>INF 138</span><span>INF 202</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="content-box absence">
+            <h3>Absence % (Limit: 30%)</h3>
+            <ul class="absence-list">
+              <li>INF 313 — <progress value="7" max="30"></progress> 7%</li>
+              <li>CSS 105 — <progress value="16" max="30"></progress> 16%</li>
+              <li>INF 313 — <progress value="0" max="30"></progress> 0%</li>
+              <li>INF 313 — <progress value="2" max="30"></progress> 2%</li>
+              <li>INF 313 — <progress value="29" max="30"></progress> 29%</li>
+            </ul>
+          </div>          
+      </div>
+
+      <div class="content-box insights">
+        <h3>Insights</h3>
+        <p>Keep track of assignment deadlines and participation for better overall performance.</p>
+        <p>Regular attendance and active participation significantly boost your prediction score!</p>
+      </div>
+    </main>
+
+    <!-- RIGHT SIDEBAR -->
+    <aside class="profile">
+      <div class="avatar"></div>
+      <div class="info">
+        <h3>Aliev Sanjar</h3>
+        <p>Student ID: 220103175</p>
+        <p>Program / Class: Information Systems</p>
+        <p>Year of Study: 3rd Year</p>
+        <p>Grant type: SG [State Grant]</p>
+      </div>
+      <div class="courses">
+        <button class="active">All courses</button>
+        <button>CSS 105</button>
+        <button>INF 313</button>
+        <button>INF 138</button>
+        <button>INF 202</button>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>
+

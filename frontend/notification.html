@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Dashboard</title>
+  <link rel="stylesheet" href="notification.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+ </head>
+<body>
+  <div class="container">
+    <!-- LEFT MENU -->
+    <article class="menu-container">
+      <div class="menu-header">
+        <img src="images/logo.png" alt="Logo" class="logo" />
+        <span class="app-name">Base</span>
+      </div>
+      <nav class="menu-items">
+        <a href="dashboard.html" class="menu-item"><img src="images/dashboard2.png" class="icon" /><span>Dashboard</span></a>
+        <a href="notification.html" class="menu-item"><img src="images/notification.png" class="icon" /><span>Notification</span></a>
+        <a href="support.html" class="menu-item"><img src="images/support.png" class="icon" /><span>Support</span></a>
+        <a href="settings.html" class="menu-item"><img src="images/setting.png" class="icon" /><span>Settings</span></a>
+      </nav>
+      <div class="menu-footer">
+        <a href="sign in.html" class="menu-item logout"><img src="images/Logout.png" class="icon" /><span>Logout</span></a>
+      </div>
+    </article>
+
+
+    <!-- NOTIFICATION CENTER -->
+    <section class="notification-side">
+      <h2 class="notification-title">Notification</h2>
+      <div class="message-box">
+        <div class="message">
+          <img src="images/notification2.png" alt="icon" class="icon" />
+          <div class="message-text">
+            <h3>New Grade Posted</h3>
+            <p>Your score for INF 313 - Midterm has been updated. Check it now!</p>
+          </div>
+        </div>
+        <div class="message">
+          <img src="images/notification2.png" alt="icon" class="icon" />
+          <div class="message-text">
+            <h3>New Grade Posted</h3>
+            <p>Your score for CSS 109 - Quiz has been updated. Check it now!</p>
+          </div>
+        </div>
+        <div class="message">
+          <img src="images/notification2.png" alt="icon" class="icon" />
+          <div class="message-text">
+            <h3>Attendance Warning</h3>
+            <p>You have missed 2 classes of INF 313. Please attend upcoming sessions to avoid penalties.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- RIGHT SIDEBAR PROFILE -->
+    <aside class="profile">
+      <div class="avatar"></div>
+      <div class="info">
+        <h3>Aliev Sanjar</h3>
+        <p>Student ID: 220103175</p>
+        <p>Program / Class: Information Systems</p>
+        <p>Year of Study: 3rd Year</p>
+        <p>Grant type: SG [State Grant]</p>
+      </div>
+      <div class="courses">
+        <button class="active">All courses</button>
+        <button>CSS 105</button>
+        <button>INF 313</button>
+        <button>INF 138</button>
+        <button>INF 202</button>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>
+
+

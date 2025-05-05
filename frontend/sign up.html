@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up</title>
+  <link rel="stylesheet" href="sign up.css">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="wrapper">
+    <div class="form-section">
+      <!-- Logo -->
+      <div class="logo">
+        <img src="images/Logo.png" alt="Logo">
+      </div>
+
+      <h2>Sign Up</h2>
+
+      <!-- Google login button -->
+      <a href="https://your-google-auth-url.com" class="google-btn">
+        <img src="images/google.png" alt="Google logo">
+        Sign in with Google
+      </a>
+
+      <!-- Separator -->
+      <div class="separator">
+        <span>or</span>
+      </div>
+
+      <!-- Form -->
+      <form action="#" method="post">
+        <input type="text" name="fullname" placeholder="Full Name" required>
+        <input type="email" name="email" placeholder="Email Address" required>
+        <input type="text" name="student_number" placeholder="Student Number" required>
+        <input type="password" name="password" placeholder="Password" required>
+
+        <div class="checkbox-text">
+          <label>
+            <input type="checkbox" required>
+            By creating an account you agree to the
+            <a href="#">terms of use</a> and our <a href="#">privacy policy</a>.
+          </label>
+        </div>
+
+        <button type="submit">Create account</button>
+      </form>
+
+      <div class="login-link">
+        Already have an account? <a href="#">Log in</a>
+      </div>
+    </div>
+
+    <div class="illustration-section">
+      <img src="images/Illustration.png" alt="Illustration">
+    </div>
+  </div>
+</body>
+</html>
