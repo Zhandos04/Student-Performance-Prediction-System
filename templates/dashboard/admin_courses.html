@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Управление курсами | Система прогнозирования успеваемости</title>
+  <link rel="stylesheet" href="/static/css/admin_courses.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <!-- LEFT SIDEBAR -->
+    <article class="menu-container">
+      <div class="menu-header">
+        <img src="/static/images/logo.png" alt="Logo" class="logo" />
+        <span class="app-name">Base</span>
+      </div>
+      <nav class="menu-items">
+        <a href="{% url 'dashboard' %}" class="menu-item"><img src="/static/images/dashboard2.png" class="icon" /><span>Панель управления</span></a>
+        <a href="{% url 'admin_courses' %}" class="menu-item"><img src="/static/images/courses.png" class="icon" /><span>Курсы</span></a>
+        <a href="{% url 'admin_students' %}" class="menu-item"><img src="/static/images/students.png" class="icon" /><span>Студенты</span></a>
+        <a href="{% url 'settings' %}" class="menu-item"><img src="/static/images/setting.png" class="icon" /><span>Настройки</span></a>
+      </nav>
+      <div class="menu-footer">
+        <a href="{% url 'logout' %}" class="menu-item logout"><img src="/static/images/Logout.png" class="icon" /><span>Выход</span></a>
+      </div>
+    </article>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+      <header class="header">
+        <h1>Управление курсами</h1>
+        <p>Добавление, редактирование и удаление курсов</p>
+      </header>
+
+      <div class="action-bar">
+        <button id="addCourseBtn" class="add-button">Добавить новый курс</button>
+      </div>
+
+      <div class="content-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Код</th>
+              <th>Название</th>
+              <th>Преподаватель</th>
+              <th>Студенты</th>
+              <th>Действия</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for course in courses %}
+            <tr>
+              <td>{{ course.code }}</td>
+              <td>{{ course.name }}</td>
+              <td>{{ course.instructor.get_full_name }}</td>
+              <td>{{ course.students.count }}</td>
+              <td class="actions">
+                <button class="edit-btn" data-id="{{ course.id }}">Редактировать</button>
+                <button class="delete-btn" data-id="{{ course.id }}">Удалить</button>
+                <form method="post" action="{% url 'run_predictions' %}" style="display: inline;">
+                  {% csrf_token %}
+                  <input type="hidden" name="course_id" value="{{ course.id }}">
+                  <button type="submit" class="predict-btn">Прогноз</button>
+                </form>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="5" class="no-results">Нет курсов</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <!-- Add Course Modal -->
+  <div id="addCourseModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Добавить новый курс</h2>
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="code">Код курса</label>
+          <input type="text" id="code" name="code" required>
+        </div>
+        <div class="form-group">
+          <label for="name">Название курса</label>
+          <input type="text" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+          <label for="instructor">Преподаватель</label>
+          <select id="instructor" name="instructor" required>
+            <option value="">-- Выберите преподавателя --</option>
+            {% for teacher in teachers %}
+            <option value="{{ teacher.id }}">{{ teacher.get_full_name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="description">Описание</label>
+          <textarea id="description" name="description" rows="3"></textarea>
+        </div>
+        <button type="submit" class="submit-btn">Сохранить</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Modal functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const modal = document.getElementById('addCourseModal');
+      const btn = document.getElementById('addCourseBtn');
+      const span = document.getElementsByClassName('close')[0];
+      
+      btn.onclick = function() {
+        modal.style.display = 'block';
+      }
+      
+      span.onclick = function() {
+        modal.style.display = 'none';
+      }
+      
+      window.onclick = function(event) {
+        if (event.target == modal) {
+          modal.style.display = 'none';
+        }
+      }
+      
+      // Edit and Delete functionality would be added here
+    });
+  </script>
+</body>
+</html>

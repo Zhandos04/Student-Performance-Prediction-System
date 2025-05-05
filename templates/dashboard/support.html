@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Поддержка | Система прогнозирования успеваемости</title>
+  <link rel="stylesheet" href="/static/css/support.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <!-- LEFT SIDEBAR -->
+    <article class="menu-box">
+      <div class="menu-header">
+        <img src="/static/images/logo.png" alt="Logo" class="logo" />
+        <span class="app-name">Base</span>
+      </div>
+      <nav class="menu-items">
+        <a href="{% url 'dashboard' %}" class="menu-item"><img src="/static/images/dashboard2.png" class="icon" /><span>Панель управления</span></a>
+        <a href="{% url 'notifications' %}" class="menu-item"><img src="/static/images/notification.png" class="icon" /><span>Уведомления</span></a>
+        <a href="{% url 'support' %}" class="menu-item"><img src="/static/images/support.png" class="icon" /><span>Поддержка</span></a>
+        <a href="{% url 'settings' %}" class="menu-item"><img src="/static/images/setting.png" class="icon" /><span>Настройки</span></a>
+      </nav>
+      <div class="menu-footer">
+        <a href="{% url 'logout' %}" class="menu-item logout"><img src="/static/images/Logout.png" class="icon" /><span>Выход</span></a>
+      </div>
+    </article>
+
+    <!-- MAIN CONTENT AND PROFILE -->
+    <div class="main">
+      <div class="support-box">
+        <h2>Поддержка</h2>
+
+        <div class="support-section">
+          <h3>Нужна помощь?</h3>
+          <p>Если у вас есть вопросы, проблемы или вам нужна помощь, мы здесь для вас!</p>
+        </div>
+
+        <div class="support-section">
+          <h3>Техническая поддержка:</h3>
+          <p>Возникли проблемы с доступом к панели управления, курсам или уведомлениям? Обратитесь в нашу службу ИТ-поддержки для быстрой помощи.</p>
+        </div>
+
+        <div class="support-section">
+          <h3>Академическая поддержка:</h3>
+          <p>Нужна академическая помощь или помощь с курсами? Наши академические консультанты здесь, чтобы помочь вам.</p>
+        </div>
+
+        <div class="support-section">
+          <h3>Общие вопросы:</h3>
+          <p>Для любых общих вопросов о системе или вашем профиле, не стесняйтесь обращаться!</p>
+        </div>
+
+        <div class="support-section">
+          <h3>Свяжитесь с нами:</h3>
+          <p>📧 support@baseuniversity.edu<br>📞 +123 456 7890</p>
+        </div>
+
+        <div class="support-hours">
+          Наша служба поддержки доступна с понедельника по пятницу, с 9:00 до 17:00.
+        </div>
+      </div>
+
+      <!-- RIGHT SIDEBAR -->
+      <aside class="profile">
+        <div class="avatar">
+          <!-- В будущем можно заменить на реальное изображение пользователя -->
+        </div>
+        <div class="info">
+          <h3>{{ request.user.first_name }} {{ request.user.last_name }}</h3>
+          <p>{{ request.user.email }}</p>
+          <p>ID: {{ request.user.student_number }}</p>
+        </div>
+        <div class="courses">
+          <h3>Мои курсы</h3>
+          {% for course in courses %}
+          <button {% if forloop.first %}class="active"{% endif %}>{{ course.name }}</button>
+          {% empty %}
+          <p>Нет записи на курсы</p>
+          {% endfor %}
+        </div>
+      </aside>
+    </div>
+  </div>
+</body>
+</html>

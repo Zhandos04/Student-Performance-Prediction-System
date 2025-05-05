@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Вход | Система прогнозирования успеваемости</title>
+  <link rel="stylesheet" href="/static/css/sign_in.css">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="wrapper">
+    <div class="form-section">
+      <!-- Logo -->
+      <div class="logo">
+        <img src="/static/images/Logo2.png" alt="Logo">
+      </div>
+
+      <h2>Вход в систему</h2>
+      
+      <!-- Separator -->
+      <div class="separator">
+        <span>или</span>
+      </div>
+
+      <!-- Form -->
+      <form method="post">
+        {% csrf_token %}
+        <input type="text" name="username" placeholder="Имя пользователя" required>
+        <input type="password" name="password" placeholder="Пароль" required>
+
+        <div class="options">
+          <label class="remember-me">
+            <input type="checkbox" name="remember_me"> Запомнить меня
+          </label>
+          <a href="#" class="reset-password">Забыли пароль?</a>
+        </div>
+
+        <button type="submit">Войти</button>
+      </form>
+
+      <div class="login-link">
+        Нет аккаунта? <a href="{% url 'signup' %}">Зарегистрироваться</a>
+      </div>
+    </div>
+
+    <div class="illustration-section">
+      <img src="/static/images/Illustration2.png" alt="Illustration">
+    </div>
+  </div>
+</body>
+</html>

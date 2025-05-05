@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Управление студентами | Система прогнозирования успеваемости</title>
+  <link rel="stylesheet" href="/static/css/admin_students.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <!-- LEFT SIDEBAR -->
+    <article class="menu-container">
+      <div class="menu-header">
+        <img src="/static/images/logo.png" alt="Logo" class="logo" />
+        <span class="app-name">Base</span>
+      </div>
+      <nav class="menu-items">
+        <a href="{% url 'dashboard' %}" class="menu-item"><img src="/static/images/dashboard2.png" class="icon" /><span>Панель управления</span></a>
+        <a href="{% url 'admin_courses' %}" class="menu-item"><img src="/static/images/courses.png" class="icon" /><span>Курсы</span></a>
+        <a href="{% url 'admin_students' %}" class="menu-item"><img src="/static/images/students.png" class="icon" /><span>Студенты</span></a>
+        <a href="{% url 'settings' %}" class="menu-item"><img src="/static/images/setting.png" class="icon" /><span>Настройки</span></a>
+      </nav>
+      <div class="menu-footer">
+        <a href="{% url 'logout' %}" class="menu-item logout"><img src="/static/images/Logout.png" class="icon" /><span>Выход</span></a>
+      </div>
+    </article>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+      <header class="header">
+        <h1>Управление студентами</h1>
+        <p>Просмотр и анализ данных студентов</p>
+      </header>
+
+      <div class="search-bar">
+        <input type="text" id="studentSearch" placeholder="Поиск студентов...">
+        <select id="courseFilter">
+          <option value="">Все курсы</option>
+          {% for course in courses %}
+          <option value="{{ course.id }}">{{ course.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="content-table">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Имя</th>
+              <th>Email</th>
+              <th>Номер студента</th>
+              <th>Курсы</th>
+              <th>Средний балл</th>
+              <th>Прогноз</th>
+              <th>Действия</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for student in students %}
+            <tr>
+              <td>{{ student.id }}</td>
+              <td>{{ student.get_full_name }}</td>
+              <td>{{ student.email }}</td>
+              <td>{{ student.student_number }}</td>
+              <td>{{ student.enrolled_courses.count }}</td>
+              <td>{% if student.grades.exists %}{{ student.grades.aggregate.avg_score|floatformat:1 }}{% else %}N/A{% endif %}</td>
+              <td>{% if student.predictions.exists %}{{ student.predictions.latest.predicted_score|floatformat:1 }}{% else %}N/A{% endif %}</td>
+              <td class="actions">
+                <button class="view-btn" data-id="{{ student.id }}">Просмотр</button>
+                <button class="edit-btn" data-id="{{ student.id }}">Редактировать</button>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="8" class="no-results">Нет студентов</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Search functionality
+      const searchInput = document.getElementById('studentSearch');
+      const courseFilter = document.getElementById('courseFilter');
+      const tableRows = document.querySelectorAll('tbody tr');
+      
+      searchInput.addEventListener('keyup', filterStudents);
+      courseFilter.addEventListener('change', filterStudents);
+      
+      function filterStudents() {
+        const searchValue = searchInput.value.toLowerCase();
+        const courseValue = courseFilter.value;
+        
+        tableRows.forEach(row => {
+          const name = row.cells[1].textContent.toLowerCase();
+          const email = row.cells[2].textContent.toLowerCase();
+          const studentNumber = row.cells[3].textContent.toLowerCase();
+          
+          // Implement course filtering with backend logic
+          const matchesSearch = name.includes(searchValue) || 
+                               email.includes(searchValue) || 
+                               studentNumber.includes(searchValue);
+          
+          if (matchesSearch) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>

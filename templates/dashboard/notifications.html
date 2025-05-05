@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Уведомления | Система прогнозирования успеваемости</title>
+  <link rel="stylesheet" href="/static/css/notification.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+ </head>
+<body>
+  <div class="container">
+    <!-- LEFT MENU -->
+    <article class="menu-container">
+      <div class="menu-header">
+        <img src="/static/images/logo.png" alt="Logo" class="logo" />
+        <span class="app-name">Base</span>
+      </div>
+      <nav class="menu-items">
+        <a href="{% url 'dashboard' %}" class="menu-item"><img src="/static/images/dashboard2.png" class="icon" /><span>Панель управления</span></a>
+        <a href="{% url 'notifications' %}" class="menu-item"><img src="/static/images/notification.png" class="icon" /><span>Уведомления</span></a>
+        <a href="{% url 'support' %}" class="menu-item"><img src="/static/images/support.png" class="icon" /><span>Поддержка</span></a>
+        <a href="{% url 'settings' %}" class="menu-item"><img src="/static/images/setting.png" class="icon" /><span>Настройки</span></a>
+      </nav>
+      <div class="menu-footer">
+        <a href="{% url 'logout' %}" class="menu-item logout"><img src="/static/images/Logout.png" class="icon" /><span>Выход</span></a>
+      </div>
+    </article>
+
+    <!-- MIDDLE NOTIFICATION AREA -->
+    <main class="notification-side">
+      <h2 class="notification-title">Уведомления</h2>
+      
+      <div class="message-box">
+        <div class="message">
+          <img src="/static/images/notification_icon.png" class="icon" alt="Notification Icon">
+          <div class="message-text">
+            <h3>Новое задание</h3>
+            <p>Добавлено новое задание по курсу "Математика". Срок сдачи: 15 мая 2025.</p>
+          </div>
+        </div>
+        
+        <div class="message">
+          <img src="/static/images/grade_icon.png" class="icon" alt="Grade Icon">
+          <div class="message-text">
+            <h3>Новая оценка</h3>
+            <p>Вы получили оценку 85 за последнее контрольную работу по физике.</p>
+          </div>
+        </div>
+        
+        <div class="message">
+          <img src="/static/images/prediction_icon.png" class="icon" alt="Prediction Icon">
+          <div class="message-text">
+            <h3>Обновление прогноза</h3>
+            <p>Ваша прогнозируемая итоговая оценка по программированию улучшилась до A-.</p>
+          </div>
+        </div>
+        
+        <div class="message">
+          <img src="/static/images/warning_icon.png" class="icon" alt="Warning Icon">
+          <div class="message-text">
+            <h3>Предупреждение о посещаемости</h3>
+            <p>Ваша посещаемость по истории ниже 75%. Это может негативно повлиять на вашу итоговую оценку.</p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- RIGHT SIDEBAR -->
+    <aside class="profile">
+      <div class="avatar">
+        <!-- В будущем можно заменить на реальное изображение пользователя -->
+      </div>
+      <div class="info">
+        <h3>{{ request.user.first_name }} {{ request.user.last_name }}</h3>
+        <p>{{ request.user.email }}</p>
+        <p>ID: {{ request.user.student_number }}</p>
+      </div>
+      <div class="courses">
+        <h3>Мои курсы</h3>
+        {% for course in courses %}
+        <button {% if forloop.first %}class="active"{% endif %}>{{ course.name }}</button>
+        {% empty %}
+        <p>Нет записи на курсы</p>
+        {% endfor %}
+      </div>
+    </aside>
+  </div>
+</body>
+</html>

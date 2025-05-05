@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Панель управления | Система прогнозирования успеваемости</title>
+  <link rel="stylesheet" href="/static/css/dashboard.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">   
+</head>
+<body>
+  <div class="container">
+    <!-- LEFT SIDEBAR -->
+    <article class="menu-container">
+      <div class="menu-header">
+        <img src="/static/images/logo.png" alt="Logo" class="logo" />
+        <span class="app-name">Base</span>
+      </div>
+      <nav class="menu-items">
+        <a href="{% url 'dashboard' %}" class="menu-item"><img src="/static/images/dashboard3.png" class="icon" /><span>Панель управления</span></a>
+        <a href="{% url 'notifications' %}" class="menu-item"><img src="/static/images/notification.png" class="icon" /><span>Уведомления</span></a>
+        <a href="{% url 'support' %}" class="menu-item"><img src="/static/images/support.png" class="icon" /><span>Поддержка</span></a>
+        <a href="{% url 'settings' %}" class="menu-item"><img src="/static/images/setting.png" class="icon" /><span>Настройки</span></a>
+      </nav>
+      <div class="menu-footer">
+        <a href="{% url 'logout' %}" class="menu-item logout"><img src="/static/images/Logout.png" class="icon" /><span>Выход</span></a>
+      </div>
+    </article>
+
+    <!-- CENTER CONTENT -->
+    <main class="main">
+      <header class="header">
+        <h1>С возвращением, {{ request.user.first_name }}!</h1>
+        <p>Вот обзор вашей академической успеваемости за этот семестр.</p>
+      </header>
+
+      <div class="stats">
+        <div class="stat-box">
+          <p>Средний балл</p>
+          <h2>85</h2>
+        </div>
+        <div class="stat-box">
+          <p>Посещаемость</p>
+          <h2>92%</h2>
+        </div>
+        <div class="stat-box">
+          <p>Прогноз оценки</p>
+          <h2>B+</h2>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="prediction">
+          <h3>Прогноз успеваемости</h3>
+          <div class="chart-wrapper">
+            <div class="y-axis">
+              <div>100</div>
+              <div>75</div>
+              <div>50</div>
+              <div>25</div>
+              <div>0</div>
+            </div>
+            <div class="chart-area">
+              <div class="chart">
+                <div style="height: 75%"><span>85</span></div>
+                <div style="height: 92%"><span>92</span></div>
+                <div style="height: 50%"><span>50</span></div>
+                <div style="height: 85%"><span>85</span></div>
+              </div>
+              <div class="x-axis">
+                <span>Математика</span>
+                <span>Физика</span>
+                <span>История</span>
+                <span>Программирование</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="absence">
+          <h3>Посещаемость по предметам</h3>
+          <ul class="absence-list">
+            <li>
+              <span>Математика</span>
+              <progress value="90" max="100"></progress>
+              <span>90%</span>
+            </li>
+            <li>
+              <span>Физика</span>
+              <progress value="85" max="100"></progress>
+              <span>85%</span>
+            </li>
+            <li>
+              <span>История</span>
+              <progress value="70" max="100"></progress>
+              <span>70%</span>
+            </li>
+            <li>
+              <span>Программирование</span>
+              <progress value="95" max="100"></progress>
+              <span>95%</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="content-box insights">
+        <h3>Выводы</h3>
+        <p>Следите за сроками сдачи заданий и участием для улучшения общей производительности.</p>
+        <p>Регулярное посещение и активное участие значительно повышают ваш прогноз успеваемости!</p>
+      </div>
+    </main>
+
+    <!-- RIGHT SIDEBAR -->
+    <aside class="profile">
+      <div class="avatar">
+        <!-- В будущем можно заменить на реальное изображение пользователя -->
+      </div>
+      <div class="info">
+        <h3>{{ request.user.first_name }} {{ request.user.last_name }}</h3>
+        <p>{{ request.user.email }}</p>
+        <p>ID: {{ request.user.student_number }}</p>
+      </div>
+      <div class="courses">
+        <h3>Мои курсы</h3>
+        {% for course in courses %}
+        <button {% if forloop.first %}class="active"{% endif %}>{{ course.name }}</button>
+        {% empty %}
+        <p>Нет записи на курсы</p>
+        {% endfor %}
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const courseButtons = document.querySelectorAll('.courses button');
+      courseButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          courseButtons.forEach(btn => btn.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
+    });
+  </script>
+</body>
+</html>

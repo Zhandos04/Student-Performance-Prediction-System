@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Регистрация | Система прогнозирования успеваемости</title>
+  <link rel="stylesheet" href="/static/css/sign_up.css">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="wrapper">
+    <div class="form-section">
+      <!-- Logo -->
+      <div class="logo">
+        <img src="/static/images/Logo.png" alt="Logo">
+      </div>
+
+      <h2>Регистрация</h2>
+
+      <!-- Separator -->
+      <div class="separator">
+        <span>или</span>
+      </div>
+
+      <!-- Form -->
+      <form method="post">
+        {% csrf_token %}
+        <input type="text" name="full_name" placeholder="Полное имя" required>
+        <input type="text" name="username" placeholder="Имя пользователя" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="text" name="student_number" placeholder="Номер студента" required>
+        <input type="password" name="password1" placeholder="Пароль" required>
+        <input type="password" name="password2" placeholder="Подтверждение пароля" required>
+
+        <div class="checkbox-text">
+          <label>
+            <input type="checkbox" required>
+            Создавая аккаунт, вы соглашаетесь с
+            <a href="#">условиями использования</a> и нашей <a href="#">политикой конфиденциальности</a>.
+          </label>
+        </div>
+
+        <button type="submit">Создать аккаунт</button>
+      </form>
+
+      <div class="login-link">
+        Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a>
+      </div>
+    </div>
+
+    <div class="illustration-section">
+      <img src="/static/images/Illustration.png" alt="Illustration">
+    </div>
+  </div>
+</body>
+</html>
