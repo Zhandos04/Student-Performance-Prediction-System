@@ -10,6 +10,7 @@ RUN apt-get update \
         libpq-dev \
         gcc \
         netcat-openbsd \
+        postgresql-client \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -17,8 +18,12 @@ COPY requirements.txt /app/
 RUN pip install --upgrade pip \
     && pip install -r requirements.txt
 
+# Установка дополнительных пакетов для отладки
+RUN pip install django-extensions ipython
+
 COPY . /app/
 
+# Устанавливаем права на выполнение entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 
 ENTRYPOINT ["/app/entrypoint.sh"]

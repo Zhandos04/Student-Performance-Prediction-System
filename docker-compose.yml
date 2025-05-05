@@ -9,6 +9,8 @@ services:
       - POSTGRES_DB=prediction_db
       - POSTGRES_USER=prediction_user
       - POSTGRES_PASSWORD=prediction_password
+    ports:
+      - "5432:5432"  # Открываем порт для доступа к БД для отладки
 
   web:
     build: .
@@ -22,6 +24,7 @@ services:
     depends_on:
       - db
     environment:
+      - DEBUG=1  # Для отладки
       - DATABASE=postgres
       - SQL_ENGINE=django.db.backends.postgresql
       - SQL_DATABASE=prediction_db
