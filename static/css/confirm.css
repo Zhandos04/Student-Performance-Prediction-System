@@ -1,0 +1,75 @@
+body {
+    margin: 0;
+    background: #f7f7f8;
+    font-family: 'Nunito', sans-serif;
+  }
+  .container {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+    background: #f7f7f8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .card {
+    width: 726px;
+    height: 726px;
+    position: relative;
+    background: #fff;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  }
+  .button {
+    width: 169px;
+    height: 50px;
+    position: absolute;
+    bottom: 50px;
+    background: #605bff;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    font-family: 'Nunito', sans-serif;
+  }
+  .message {
+    position: absolute;
+    top: 400px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 600;
+    color: #000;
+    font-family: 'Nunito', sans-serif;
+  }
+  .circle-bg {
+    width: 184px;
+    height: 184px;
+    position: absolute;
+    top: 150px;
+    background: #605bff;
+    opacity: 0.05;
+    border-radius: 50%;
+  }
+  .icon-thumbs-up {
+    width: 77px;
+    height: 69px;
+    position: absolute;
+    top: 200px;
+  }
+  .illustration {
+    width: 241px;
+    height: 90px;
+    position: absolute;
+    top: 300px;
+    transform: rotate(-1deg);
+    transform-origin: top left;
+  }

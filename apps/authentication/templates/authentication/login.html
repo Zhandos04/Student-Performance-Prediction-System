@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Вход | Система прогнозирования успеваемости{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/sign_in.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="wrapper">
+  <div class="form-section">
+    <!-- Logo -->
+    <div class="logo">
+      <img src="{% static 'images/Logo2.png' %}" alt="Logo">
+    </div>
+
+    <h2>Вход в систему</h2>
+
+    <!-- Google login button -->
+    <a href="#" class="google-btn">
+      <img src="{% static 'images/google.png' %}" alt="Google logo">
+      Войти через Google
+    </a>
+    
+    <!-- Separator -->
+    <div class="separator">
+      <span>или</span>
+    </div>
+
+    <!-- Form -->
+    <form method="post">
+      {% csrf_token %}
+      {{ form|crispy }}
+
+      <div class="options">
+        <label class="remember-me">
+          <input type="checkbox" name="remember">
+          Запомнить меня
+        </label>
+        <a href="#" class="reset-password">Сбросить пароль?</a>
+      </div>
+
+      <button type="submit">Войти</button>
+    </form>
+
+    <div class="login-link">
+      Нет аккаунта? <a href="{% url 'signup' %}">Зарегистрироваться</a>
+    </div>
+  </div>
+
+  <div class="illustration-section">
+    <img src="{% static 'images/Illustration2.png' %}" alt="Illustration">
+  </div>
+</div>
+{% endblock %}

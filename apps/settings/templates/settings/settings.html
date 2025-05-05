@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Настройки | Система прогнозирования успеваемости{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/settings.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <!-- LEFT SIDEBAR -->
+  <article class="menu-container">
+    <div class="menu-header">
+      <img src="{% static 'images/logo.png' %}" alt="Logo" class="logo" />
+      <span class="app-name">Base</span>
+    </div>
+    <nav class="menu-items">
+      <a href="{% url 'dashboard' %}" class="menu-item"><img src="{% static 'images/dashboard2.png' %}" class="icon" /><span>Дашборд</span></a>
+      <a href="{% url 'notification' %}" class="menu-item"><img src="{% static 'images/notification.png' %}" class="icon" /><span>Уведомления</span></a>
+      <a href="{% url 'support' %}" class="menu-item"><img src="{% static 'images/support.png' %}" class="icon" /><span>Поддержка</span></a>
+      <a href="{% url 'settings' %}" class="menu-item"><img src="{% static 'images/setting.png' %}" class="icon" /><span>Настройки</span></a>
+    </nav>
+    <div class="menu-footer">
+      <a href="{% url 'logout' %}" class="menu-item logout"><img src="{% static 'images/Logout.png' %}" class="icon" /><span>Выйти</span></a>
+    </div>
+  </article>
+
+  <!-- MAIN CONTENT AREA -->
+  <div class="content-area">
+    <header class="page-header">
+      <h1>Настройки</h1>
+    </header>
+    
+    {% if messages %}
+    <div class="messages">
+      {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">
+        {{ message }}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    
+    <section class="form-section">
+      <h2>Изменить пароль</h2>
+      <form method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit">Сохранить изменения</button>
+        <p class="note">
+          После изменения пароля вам потребуется войти заново.
+        </p>
+      </form>
+    </section>
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/settings.js' %}"></script>
+{% endblock %}

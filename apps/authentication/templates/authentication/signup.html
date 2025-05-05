@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Регистрация | Система прогнозирования успеваемости{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/sign_up.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="wrapper">
+  <div class="form-section">
+    <!-- Logo -->
+    <div class="logo">
+      <img src="{% static 'images/Logo.png' %}" alt="Logo">
+    </div>
+
+    <h2>Регистрация</h2>
+
+    <!-- Google login button -->
+    <a href="#" class="google-btn">
+      <img src="{% static 'images/google.png' %}" alt="Google logo">
+      Зарегистрироваться через Google
+    </a>
+
+    <!-- Separator -->
+    <div class="separator">
+      <span>или</span>
+    </div>
+
+    <!-- Form -->
+    <form method="post">
+      {% csrf_token %}
+      {{ form|crispy }}
+
+      <div class="checkbox-text">
+        <label>
+          <input type="checkbox" required>
+          Создавая аккаунт, вы соглашаетесь с
+          <a href="#">условиями использования</a> и нашей <a href="#">политикой конфиденциальности</a>.
+        </label>
+      </div>
+
+      <button type="submit">Создать аккаунт</button>
+    </form>
+
+    <div class="login-link">
+      Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a>
+    </div>
+  </div>
+
+  <div class="illustration-section">
+    <img src="{% static 'images/Illustration.png' %}" alt="Illustration">
+  </div>
+</div>
+{% endblock %}
